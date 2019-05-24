@@ -24,5 +24,4 @@ public class ChooseActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-
 }

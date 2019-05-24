@@ -1,11 +1,13 @@
 package com.example.madlibs;
 
 import android.content.Intent;
-import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,52 +57,75 @@ public class WordsActivity extends AppCompatActivity {
             story = (Story) savedInstanceState.getSerializable("story");
         }
 
-
+        // Set the hint.
         String placeholder = story.getNextPlaceholder();
-
         wordsField = findViewById(R.id.textInputLayout);
         wordsField.setHint(placeholder);
+
+        // Set the counter.
         TextView counter = findViewById(R.id.counter);
         counter.setText(Integer.toString(story.getPlaceholderRemainingCount()));
+
+
+        final EditText editText = findViewById(R.id.textField);
+
+        // This makes the 'ok' or 'done' button on the keyboard also press the 'ok' button on the screen.
+        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    submit();
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
 
-    public void onSubmit (View view){
-        // get the text that the user typed
+    public void submit(){
+        // Get the text that the user typed.
         String word = wordsField.getEditText().getText().toString();
         System.out.println(word);
 
-
+        // Only accept alphabetic characters.
         if(Pattern.matches("[a-zA-Z]+", word))
         {
             story.fillInPlaceholder(word);
-            System.out.println(word + "succesfully submitted!");
+
         }
         else
         {
             Toast toast = Toast.makeText(this, "Only use alphabetic characters.", Toast.LENGTH_SHORT);
-            System.out.println(word + "not a good word!");
+            toast.show();
             return;
         }
 
         int remaining = story.getPlaceholderRemainingCount();
 
         if (remaining > 0){
+
             // If there are placeholders left to be filled in, put the next hint in the textfield.
             String placeholder = story.getNextPlaceholder();
             wordsField.setHint(placeholder);
             wordsField.getEditText().setText("");
             TextView counter = findViewById(R.id.counter);
             counter.setText(Integer.toString(story.getPlaceholderRemainingCount()));
+
         } else {
+
             // Otherwise, go to the story.
             Intent intent = new Intent(WordsActivity.this, StoryActivity.class);
             intent.putExtra("story", story);
             startActivity(intent);
+
         }
     }
 
 
+    public void onSubmit (View view){
+        submit();
+    }
 
 
     public void onSaveInstanceState(Bundle outState) {

@@ -24,6 +24,7 @@ public class StoryActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        // Don't go back to the word submitting, but go back to the main screen.
         Intent intent = new Intent(this,MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
