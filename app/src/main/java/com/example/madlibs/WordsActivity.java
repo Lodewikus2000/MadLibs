@@ -67,9 +67,10 @@ public class WordsActivity extends AppCompatActivity {
         counter.setText(Integer.toString(story.getPlaceholderRemainingCount()));
 
 
-        final EditText editText = findViewById(R.id.textField);
+        EditText editText = findViewById(R.id.textField);
 
         // This makes the 'ok' or 'done' button on the keyboard also press the 'ok' button on the screen.
+        // Found it here: https://stackoverflow.com/questions/9596010/android-use-done-button-on-keyboard-to-click-button
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
